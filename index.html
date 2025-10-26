@@ -11,13 +11,16 @@
     .answers { list-style: none; padding: 0; }
     .answers li { margin-bottom: 10px; }
     button { padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; }
+    #feedback { margin-top: 10px; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <div class="quiz-container">
     <div id="quiz"></div>
-    <button id="next">Suivant</button>
+    <button id="check">Vérifier</button>
+    <button id="next" style="display:none;">Suivant</button>
+    <div id="feedback"></div>
     <div id="result"></div>
 </div>
 
@@ -150,12 +153,13 @@ quizData.push(
     { question: "120. Avantage principal des microservices ?", options: {A:"Scalabilité, maintenabilité et déploiement indépendant", B:"Aucune", C:"Plus lent", D:"Moins sécurisé"}, answer: "A" }
 );
 
-
 let currentQuestion = 0;
 let score = 0;
 
 const quizContainer = document.getElementById('quiz');
+const feedbackContainer = document.getElementById('feedback');
 const resultContainer = document.getElementById('result');
+const checkButton = document.getElementById('check');
 const nextButton = document.getElementById('next');
 
 function loadQuestion() {
@@ -174,25 +178,36 @@ function loadQuestion() {
         <div class="question">${q.question}</div>
         <ul class="answers">${optionsHTML.join('')}</ul>
     `;
+    feedbackContainer.innerHTML = '';
+    checkButton.style.display = 'inline';
+    nextButton.style.display = 'none';
 }
 
-nextButton.addEventListener('click', () => {
+checkButton.addEventListener('click', () => {
     const selected = document.querySelector('input[name="answer"]:checked');
     if (!selected) {
-        alert("Veuillez choisir une réponse avant de continuer !");
+        alert("Veuillez choisir une réponse !");
         return;
     }
 
-    if (selected.value === quizData[currentQuestion].answer) {
-        score++;
-    }
+    const isCorrect = selected.value === quizData[currentQuestion].answer;
+    feedbackContainer.innerHTML = isCorrect ? "✅ Correct !" : `❌ Incorrect ! La bonne réponse est ${quizData[currentQuestion].answer}`;
+    
+    if (isCorrect) score++;
+    
+    checkButton.style.display = 'none';
+    nextButton.style.display = 'inline';
+});
 
+nextButton.addEventListener('click', () => {
     currentQuestion++;
     if (currentQuestion < quizData.length) {
         loadQuestion();
     } else {
         quizContainer.innerHTML = '';
+        checkButton.style.display = 'none';
         nextButton.style.display = 'none';
+        feedbackContainer.innerHTML = '';
         resultContainer.innerHTML = `<h2>Votre score: ${score} / ${quizData.length}</h2>`;
     }
 });
@@ -202,6 +217,3 @@ loadQuestion();
 
 </body>
 </html>
-
-
-
