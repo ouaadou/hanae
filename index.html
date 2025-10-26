@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Informatique - Une Question à la Fois</title>
+<title>Quiz Informatique</title>
 <style>
     body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
     .quiz-container { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #333; }
+    .question-num { font-size: 14px; color: #555; margin-bottom: 5px; }
     .question { font-weight: bold; margin-bottom: 15px; }
     .answers { list-style: none; padding: 0; }
     .answers li { margin-bottom: 10px; }
@@ -15,6 +17,8 @@
 </style>
 </head>
 <body>
+
+<h1>Bon courage ❤️💕</h1>
 
 <div class="quiz-container">
     <div id="quiz"></div>
@@ -25,6 +29,7 @@
 </div>
 
 <script>
+
 const quizData = [
     { question: "1. Quel est le rôle principal d’un compilateur dans un programme informatique ?", options: {A:"Exécuter le code ligne par ligne", B:"Traduire le code source en code machine", C:"Optimiser la mémoire du programme", D:"Gérer les entrées et sorties"}, answer: "B" },
     { question: "2. Quel type de boucle permet d’exécuter une série d’instructions un nombre fixe de fois ?", options: {A:"Boucle while", B:"Boucle do-while", C:"Boucle for", D:"Boucle foreach"}, answer: "C" },
@@ -153,6 +158,7 @@ quizData.push(
     { question: "120. Avantage principal des microservices ?", options: {A:"Scalabilité, maintenabilité et déploiement indépendant", B:"Aucune", C:"Plus lent", D:"Moins sécurisé"}, answer: "A" }
 );
 
+
 let currentQuestion = 0;
 let score = 0;
 
@@ -175,6 +181,7 @@ function loadQuestion() {
         `);
     }
     quizContainer.innerHTML = `
+        <div class="question-num">Question ${currentQuestion + 1} / ${quizData.length}</div>
         <div class="question">${q.question}</div>
         <ul class="answers">${optionsHTML.join('')}</ul>
     `;
