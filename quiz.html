@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programming & Security Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .quiz-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 90%;
+    }
+    h2 { margin-bottom: 1rem; }
+    .option {
+      background: #f1f2f6;
+      margin: .5rem 0;
+      padding: .7rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: .3s;
+    }
+    .option:hover { background: #dfe4ea; }
+    .correct { background: #2ed573; color: white; }
+    .wrong { background: #ff4757; color: white; }
+    button {
+      margin-top: 1rem;
+      padding: .6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background: #3742fa;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { background: #2f3542; }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <h2 id="question"></h2>
+    <div id="options"></div>
+    <button id="nextBtn">Next</button>
+    <p id="feedback" style="margin-top:1rem;font-weight:bold;"></p>
+  </div>
+
+  <script>
+    const quizData = [
+      { 
+        question: "Quel est le rôle principal d’un compilateur dans un programme informatique ?",
+        options: ["A) Exécuter le code directement", "B) Traduire le code source en code machine", "C) Déboguer le programme", "D) Charger les bibliothèques dynamiques"],
+        answer: 1
+      },
+      {
+        question: "Quel type de boucle permet d’exécuter une série d’instructions un nombre fixe de fois ?",
+        options: ["A) while", "B) do...while", "C) for", "D) repeat-until"],
+        answer: 2
+      },
+      {
+        question: "Quel est le rôle d’un interpréteur dans un langage de programmation ?",
+        options: ["A) Compiler le programme entier", "B) Traduire et exécuter le code ligne par ligne", "C) Créer des exécutables", "D) Vérifier la syntaxe uniquement"],
+        answer: 1
+      },
+      {
+        question: "Qu’est-ce qu’une variable locale ?",
+        options: ["A) Accessible dans tout le programme", "B) Accessible uniquement dans une fonction", "C) Stockée dans le disque", "D) Partagée entre tous les threads"],
+        answer: 1
+      },
+      {
+        question: "Quel est le type de cryptographie utilisant une seule clé pour chiffrer et déchiffrer ?",
+        options: ["A) Cryptographie symétrique", "B) Cryptographie asymétrique", "C) Cryptographie hybride", "D) RSA"],
+        answer: 0
+      }
+      // 👉 You can add the rest of the questions (18–49) in the same format
+    ];
+
+    let current = 0;
+    let score = 0;
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function loadQuestion() {
+      const q = quizData[current];
+      questionEl.textContent = `${current + 1}. ${q.question}`;
+      optionsEl.innerHTML = '';
+      feedbackEl.textContent = '';
+      q.options.forEach((opt, i) => {
+        const div = document.createElement('div');
+        div.classList.add('option');
+        div.textContent = opt;
+        div.onclick = () => selectAnswer(div, i);
+        optionsEl.appendChild(div);
+      });
+    }
+
+    function selectAnswer(div, i) {
+      const q = quizData[current];
+      const options = document.querySelectorAll('.option');
+      options.forEach(opt => opt.onclick = null);
+      if (i === q.answer) {
+        div.classList.add('correct');
+        feedbackEl.textContent = "✅ Correct!";
+        score++;
+      } else {
+        div.classList.add('wrong');
+        feedbackEl.textContent = "❌ Wrong!";
+        options[q.answer].classList.add('correct');
+      }
+    }
+
+    nextBtn.onclick = () => {
+      if (current < quizData.length - 1) {
+        current++;
+        loadQuestion();
+      } else {
+        questionEl.textContent = `Quiz finished!`;
+        optionsEl.innerHTML = `<p>You scored ${score} / ${quizData.length}</p>`;
+        nextBtn.style.display = 'none';
+        feedbackEl.textContent = '';
+      }
+    };
+
+    loadQuestion();
+  </script>
+</body>
+</html>
