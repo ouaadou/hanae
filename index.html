@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Informatique Complet</title>
+<title>Quiz Informatique - Une Question à la Fois</title>
 <style>
     body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-    .quiz-container { max-width: 900px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    .question { font-weight: bold; margin-bottom: 10px; }
+    .quiz-container { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { font-weight: bold; margin-bottom: 15px; }
     .answers { list-style: none; padding: 0; }
     .answers li { margin-bottom: 10px; }
     button { padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; }
@@ -17,7 +17,7 @@
 
 <div class="quiz-container">
     <div id="quiz"></div>
-    <button id="submit">Soumettre</button>
+    <button id="next">Suivant</button>
     <div id="result"></div>
 </div>
 
@@ -150,46 +150,58 @@ quizData.push(
     { question: "120. Avantage principal des microservices ?", options: {A:"Scalabilité, maintenabilité et déploiement indépendant", B:"Aucune", C:"Plus lent", D:"Moins sécurisé"}, answer: "A" }
 );
 
-// For brevity, the remaining questions (76-120) can be added in the same format.
+
+let currentQuestion = 0;
+let score = 0;
 
 const quizContainer = document.getElementById('quiz');
 const resultContainer = document.getElementById('result');
-const submitButton = document.getElementById('submit');
+const nextButton = document.getElementById('next');
 
-function loadQuiz() {
-    const output = [];
-    quizData.forEach((current, index) => {
-        const options = [];
-        for (let letter in current.options) {
-            options.push(
-                `<li>
-                    <label>
-                        <input type="radio" name="question${index}" value="${letter}"> ${letter}: ${current.options[letter]}
-                    </label>
-                </li>`
-            );
-        }
-        output.push(
-            `<div class="question">${current.question}</div>
-             <ul class="answers">${options.join('')}</ul>`
-        );
-    });
-    quizContainer.innerHTML = output.join('');
+function loadQuestion() {
+    const q = quizData[currentQuestion];
+    const optionsHTML = [];
+    for (let key in q.options) {
+        optionsHTML.push(`
+            <li>
+                <label>
+                    <input type="radio" name="answer" value="${key}"> ${key}: ${q.options[key]}
+                </label>
+            </li>
+        `);
+    }
+    quizContainer.innerHTML = `
+        <div class="question">${q.question}</div>
+        <ul class="answers">${optionsHTML.join('')}</ul>
+    `;
 }
 
-function showResults() {
-    let score = 0;
-    quizData.forEach((current, index) => {
-        const selector = `input[name=question${index}]:checked`;
-        const userAnswer = (document.querySelector(selector) || {}).value;
-        if (userAnswer === current.answer) score++;
-    });
-    resultContainer.innerHTML = `Votre score: ${score} / ${quizData.length}`;
-}
+nextButton.addEventListener('click', () => {
+    const selected = document.querySelector('input[name="answer"]:checked');
+    if (!selected) {
+        alert("Veuillez choisir une réponse avant de continuer !");
+        return;
+    }
 
-loadQuiz();
-submitButton.addEventListener('click', showResults);
+    if (selected.value === quizData[currentQuestion].answer) {
+        score++;
+    }
+
+    currentQuestion++;
+    if (currentQuestion < quizData.length) {
+        loadQuestion();
+    } else {
+        quizContainer.innerHTML = '';
+        nextButton.style.display = 'none';
+        resultContainer.innerHTML = `<h2>Votre score: ${score} / ${quizData.length}</h2>`;
+    }
+});
+
+loadQuestion();
 </script>
 
 </body>
 </html>
+
+
+
